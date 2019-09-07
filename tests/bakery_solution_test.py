@@ -24,24 +24,38 @@ class TestBakery(object):
         assert expected == observed, 'Failed to add item in bakery_items list.'
 
     @pytest.fixture()
-    def bakery_item_pack(self):
+    def bakery_object(self,request):
         bk = Bakery()
         bk.add_bakery_item_pack('VS5',3,6.99)
         bk.add_bakery_item_pack('VS5',5,8.99)
+        bk.add_bakery_item_pack('MB11',2,9.95)
+        bk.add_bakery_item_pack('MB11',5,16.95)
+        bk.add_bakery_item_pack('MB11',8,24.95)
+        bk.add_bakery_item_pack('CF',3,5.95)
+        bk.add_bakery_item_pack('CF',5,9.95)
+        bk.add_bakery_item_pack('CF',9,16.95)
+        bk.add_bakery_item('Vegemite Scroll','VS5')
+        bk.add_bakery_item('Blueberry Muffin','MB11')
+        bk.add_bakery_item('Croissant','CF')
         return bk
 
-    def test_get_bakary_item_pack(self,bakery_item_pack):
-        assert bakery_item_pack.get_bakery_item_pack('VS5',3) == 6.99, \
+    def test_get_bakary_item_pack(self,bakery_object):
+        assert bakery_object.get_bakery_item_pack('VS5',3) == 6.99, \
             'Wrong value fetched for code- VS5 and size-3'
-        assert bakery_item_pack.get_bakery_item_pack('VS5',5) == 8.99, \
+        assert bakery_object.get_bakery_item_pack('VS5',5) == 8.99, \
             'Wrong value fetched for code- VS5 and size-5'
 
-    def test_get_bakary_item_pack_with_wrong_size(self):
-        assert TestBakery.bakery.get_bakery_item_pack('VS5',8) == None
+    def test_get_bakary_item_with_wrong_code(self,bakery_object):
+        assert bakery_object.get_bakery_item('MB123') == None
             
-    def test_get_bakary_item_pack_with_wrong_code(self):
-        assert TestBakery.bakery.get_bakery_item_pack('VS15',8) == None
+    def test_get_bakary_item(self,bakery_object):
+        assert bakery_object.get_bakery_item('VS5') == 'Vegemite Scroll'
 
+    def test_get_bakary_item_pack_with_wrong_size(self,bakery_object):
+        assert bakery_object.get_bakery_item_pack('VS5',8) == None
+            
+    def test_get_bakary_item_pack_with_wrong_code(self,bakery_object):
+        assert bakery_object.get_bakery_item_pack('VS15',8) == None
 
     @classmethod
     def teardown_class(cls):

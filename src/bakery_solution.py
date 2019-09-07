@@ -2,7 +2,7 @@ import logging
 
 #log configuration
 logging.basicConfig(filename='logs/bakery.log', \
-    filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+    filemode='a', format='%(name)s - %(levelname)s - %(message)s')
 
 class Bakery:
     def __init__(self, *args, **kwargs):
