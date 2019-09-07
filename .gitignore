@@ -2,3 +2,6 @@
 __pycache__/
 *$py.class
 *.pyc
+launch.json
+file.py
+*.log
