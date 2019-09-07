@@ -39,23 +39,28 @@ class TestBakery(object):
         bk.add_bakery_item('Croissant','CF')
         return bk
 
-    def test_get_bakary_item_pack(self,bakery_object):
-        assert bakery_object.get_bakery_item_pack('VS5',3) == 6.99, \
-            'Wrong value fetched for code- VS5 and size-3'
-        assert bakery_object.get_bakery_item_pack('VS5',5) == 8.99, \
-            'Wrong value fetched for code- VS5 and size-5'
+    @pytest.mark.parametrize("code,size,expected",[('VS5',3,6.99),('VS5',5,8.99)])
+    def test_get_bakary_item_pack(self,code, size, expected, bakery_object):
+        assert bakery_object.get_bakery_item_pack(code,size) == expected, \
+            'Wrong value fetched for code- {} and size- {}'.format(code,size)
 
     def test_get_bakary_item_with_wrong_code(self,bakery_object):
-        assert bakery_object.get_bakery_item('MB123') == None
+        assert bakery_object.get_bakery_item('Blueberry cake') == None
             
     def test_get_bakary_item(self,bakery_object):
-        assert bakery_object.get_bakery_item('VS5') == 'Vegemite Scroll'
+        assert bakery_object.get_bakery_item('Vegemite Scroll') == 'VS5'
 
     def test_get_bakary_item_pack_with_wrong_size(self,bakery_object):
         assert bakery_object.get_bakery_item_pack('VS5',8) == None
             
     def test_get_bakary_item_pack_with_wrong_code(self,bakery_object):
         assert bakery_object.get_bakery_item_pack('VS15',8) == None
+    
+    @pytest.mark.skip
+    @pytest.mark.parametrize("name, order_size,expected",[('Vegemite Scroll',10,17.98),('Blueberry Muffin',14,54.8)])
+    def test_order_bakery_items(self, name, order_size, expected, bakery_object):
+        observed = bakery_object.order_bakery_item(name,order_size)
+        assert observed == expected, 'Expecting {} but got {}'.format(expected, observed)
 
     @classmethod
     def teardown_class(cls):

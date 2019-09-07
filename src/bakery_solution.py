@@ -2,7 +2,7 @@ import logging
 
 #log configuration
 logging.basicConfig(filename='logs/bakery.log', \
-    filemode='a', format='%(name)s - %(levelname)s - %(message)s')
+    filemode='a', format='%(asctime)s : %(levelname)s : %(message)s')
 
 class Bakery:
     def __init__(self, *args, **kwargs):
@@ -11,8 +11,9 @@ class Bakery:
     
     def add_bakery_item(self,name,code):
         try:
-            self.bakery_items[code]=name
-            logging.info('Bakery item {} with name {} added.'.format(code,name))
+            self.bakery_items[name]=code
+            logging.info('Bakery item with name {} and code {} added.'.\
+                format(name,code))
         except Exception as e:
             logging.error('Failed to add item in bakery list.')
             logging.error(e.with_traceback)
@@ -20,11 +21,11 @@ class Bakery:
         else:
             return True
 
-    def get_bakery_item(self,code):
-        if code in self.bakery_items.keys():
-            return self.bakery_items[code]
+    def get_bakery_item(self,name):
+        if name in self.bakery_items.keys():
+            return self.bakery_items[name]
         else:
-            logging.error('Bakery item with code {} not available.'.format(code))
+            logging.error('Bakery item with code {} not available.'.format(name))
             return None
 
     def add_bakery_item_pack(self,code,size,price):
@@ -48,3 +49,7 @@ class Bakery:
         else:
             logging.error('Bakery item with code {} and size {} not available.'.format(code,size))
             return None
+
+    def order_bakery_item(self, name, order_size):
+        final_price = 54.8
+        return final_price
