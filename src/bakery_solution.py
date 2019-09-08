@@ -56,7 +56,7 @@ class Bakery:
     def __get_pack_util(self,pack_list, requested_size, result_pack, \
         result_size, result_list ):
         if result_size == requested_size:
-            result_pack.sort()
+            result_pack.sort(reverse=True)
             if result_pack not in result_list:
                 result_list.append(result_pack.copy())
             return 0
@@ -70,6 +70,22 @@ class Bakery:
                     result_size -= pack
                     result_pack.remove(pack)
 
+    def __get_total_price_and_pack_details(self, code, result_list):
+        result_list = min(result_list,key=len)
+        final_price = 0
+        pack_combo = {}
+        for i,pack in enumerate(result_list):
+            pack_price = self.bakery_packs[code][pack]
+            final_price += pack_price
+            if pack not in pack_combo.keys():
+                pack_combo[pack] = [1,pack_price]
+            else:
+                count = pack_combo[pack][0]
+                price = pack_combo[pack][1]
+                pack_combo[pack] = [count+1,price+pack_price]
+        return float(format(final_price,'.2f')), pack_combo
+            
+
     def order_bakery_item(self, name, order_size):
         code = self.get_bakery_item(name)
         pack_list = list(self.bakery_packs[code].keys())
@@ -78,7 +94,7 @@ class Bakery:
         self.__get_pack_util(pack_list, order_size, \
             result_pack, 0, result_list)
         if len(result_list) > 0 :
-            return 17.98
+            return self.__get_total_price_and_pack_details(code,result_list)
         else:
             logging.error(\
                 "Requested order of {} for {} could not be placed as no combination available.".\

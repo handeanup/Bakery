@@ -56,12 +56,11 @@ class TestBakery(object):
     def test_get_bakary_item_pack_with_wrong_code(self,bakery_object):
         assert bakery_object.get_bakery_item_pack('VS15',8) == None
     
-    @pytest.mark.xfail
     @pytest.mark.parametrize("name, order_size,expected",[('Vegemite Scroll',10,17.98),\
         ('Blueberry Muffin',14,54.8),('Croissant',13,25.85)])
     def test_order_bakery_items(self, name, order_size, expected, bakery_object):
-        observed = bakery_object.order_bakery_item(name,order_size)
-        assert observed == expected, 'Expecting {} but got {}'.format(expected, observed)
+        price, pack_combo = bakery_object.order_bakery_item(name,order_size)
+        assert price == expected, 'Expecting {} but got {}'.format(expected, price)
 
     def test_order_bakery_item_when_order_size_is_very_small(self,bakery_object):
         order_size = 1
