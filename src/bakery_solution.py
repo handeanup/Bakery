@@ -91,7 +91,7 @@ class Bakery:
         # Check for item present in bakery or not
         if code not in self.bakery_packs.keys():
             logging.error('Requested item {} not available.'.format(code))
-            raise ValueError('Could not found item {} in bakery list.'.format(code))
+            raise ValueError('Could not find item {} in bakery list.'.format(code))
         pack_list = list(self.bakery_packs[code].keys())
         result_pack = []
         result_list = []
@@ -103,4 +103,4 @@ class Bakery:
             logging.error(\
                 "Requested order of {} for {} could not be placed as no combination available.".\
                 format(order_size,code))
-            raise ValueError('Could not found any combination for order size {}'.format(order_size))
+            raise ValueError('Could not find any combination for order size {}'.format(order_size))

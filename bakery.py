@@ -30,7 +30,7 @@ def main():
             print('{} {} ${}'.format(order_size,code,price))
             for pack,l in pack_obj.items() :
                 pak_price = bk.get_bakery_item_pack(code,pack)
-                print('\t{}*{} ${}'.format(l[0],pack, pak_price))
+                print('\t{} x {} ${}'.format(l[0],pack, pak_price))
 
 if __name__ == "__main__":
     main()
