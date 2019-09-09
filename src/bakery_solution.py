@@ -38,7 +38,7 @@ class Bakery:
                 self.bakery_packs[code].update({size: price})
             logging.info('Bakery item {} with size {} and price {} added.'\
                 .format(code,size,price))
-        except KeyError as e:
+        except KeyError:
             logging.error('Failed to add pack item in list.')
             return False
         else:

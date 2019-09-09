@@ -9,6 +9,7 @@ HOW TO PROVIDE INPUT?
     13 CF
 
     Note: Do not insert blank lines inbetween or at the end.
+          Enter space between order_size and bakery item code 
 
 HOW TO RUN?
     > python .\bakery.py

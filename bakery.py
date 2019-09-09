@@ -21,9 +21,12 @@ def main():
     with open('sample_input.txt','r') as fp:
         lines = fp.readlines()
         for line in lines:
-            order_size, code = line.split()
             try:
-                price,pack_obj = bk.order_bakery_item(code,int(order_size))
+                order_size, code = line.split()
+            except ValueError:
+                continue
+            try:
+                price,pack_obj = bk.order_bakery_item(code.strip(),int(order_size))
             except ValueError as e:
                 print(str(e))
                 continue    

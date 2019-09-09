@@ -23,7 +23,7 @@ class TestBakery(object):
         observed = TestBakery.bakery.add_bakery_item(name,code)
         assert expected == observed, 'Failed to add item in bakery_items list.'
 
-    @pytest.fixture()
+    @pytest.fixture(scope='function')
     def bakery_object(self,request):
         bk = Bakery()
         bk.add_bakery_item_pack('VS5',3,6.99)
@@ -64,7 +64,7 @@ class TestBakery(object):
     @pytest.mark.parametrize("code, order_size,expected",[('VS5',10,17.98),\
         ('MB11',14,54.8),('CF',13,25.85)])
     def test_order_bakery_items(self, code, order_size, expected, bakery_object):
-        price, pack_combo = bakery_object.order_bakery_item(code,order_size)
+        price, _ = bakery_object.order_bakery_item(code,order_size)
         assert price == expected, 'Expecting {} but got {}'.format(expected, price)
 
     def test_order_bakery_item_when_order_size_is_very_small(self,bakery_object):
