@@ -45,32 +45,37 @@ class TestBakery(object):
             'Wrong value fetched for code- {} and size- {}'.format(code,size)
 
     def test_get_bakary_item_with_wrong_code(self,bakery_object):
-        assert bakery_object.get_bakery_item('Blueberry cake') == None
+        with pytest.raises(ValueError):
+            bakery_object.get_bakery_item('Blueberry cake')
             
     def test_get_bakary_item(self,bakery_object):
-        assert bakery_object.get_bakery_item('Vegemite Scroll') == 'VS5'
+        assert bakery_object.get_bakery_item('VS5') == 'Vegemite Scroll'
 
     def test_get_bakary_item_pack_with_wrong_size(self,bakery_object):
-        assert bakery_object.get_bakery_item_pack('VS5',8) == None
+        size = 8
+        with pytest.raises(ValueError):
+            bakery_object.get_bakery_item_pack('VS5',size)
             
     def test_get_bakary_item_pack_with_wrong_code(self,bakery_object):
-        assert bakery_object.get_bakery_item_pack('VS15',8) == None
+        code = 'VS15'
+        with pytest.raises(ValueError):
+            bakery_object.get_bakery_item_pack(code,8)
     
-    @pytest.mark.parametrize("name, order_size,expected",[('Vegemite Scroll',10,17.98),\
-        ('Blueberry Muffin',14,54.8),('Croissant',13,25.85)])
-    def test_order_bakery_items(self, name, order_size, expected, bakery_object):
-        price, pack_combo = bakery_object.order_bakery_item(name,order_size)
+    @pytest.mark.parametrize("code, order_size,expected",[('VS5',10,17.98),\
+        ('MB11',14,54.8),('CF',13,25.85)])
+    def test_order_bakery_items(self, code, order_size, expected, bakery_object):
+        price, pack_combo = bakery_object.order_bakery_item(code,order_size)
         assert price == expected, 'Expecting {} but got {}'.format(expected, price)
 
     def test_order_bakery_item_when_order_size_is_very_small(self,bakery_object):
         order_size = 1
-        observed = bakery_object.order_bakery_item('Vegemite Scroll',order_size)
-        assert observed == None, 'Expecting None but got {}'.format(observed)
+        with pytest.raises(ValueError):
+            bakery_object.order_bakery_item('VS5',order_size)
 
     def test_order_bakery_item_when_method_could_not_find_pack_combinations(self,bakery_object):
         order_size = 7
-        observed = bakery_object.order_bakery_item('Croissant',order_size)
-        assert observed == None, 'Expecting None but got {}'.format(observed)
+        with pytest.raises(ValueError):
+            bakery_object.order_bakery_item('CF',order_size)
 
     @classmethod
     def teardown_class(cls):

@@ -11,7 +11,7 @@ class Bakery:
     
     def add_bakery_item(self,name,code):
         try:
-            self.bakery_items[name]=code
+            self.bakery_items[code]=name
             logging.info('Bakery item with name {} and code {} added.'.\
                 format(name,code))
         except KeyError as e:
@@ -21,13 +21,14 @@ class Bakery:
         else:
             return True
 
-    def get_bakery_item(self,name):
-        if name in self.bakery_items.keys():
-            return self.bakery_items[name]
+    def get_bakery_item(self,code):
+        if code in self.bakery_items.keys():
+            return self.bakery_items[code]
         else:
             logging.error('Bakery item with code {} not available.'.\
-                format(name))
-            return None
+                format(code))
+            raise ValueError('Bakery item with code {} not available.'.\
+                format(code))
 
     def add_bakery_item_pack(self,code,size,price):
         try:
@@ -39,7 +40,6 @@ class Bakery:
                 .format(code,size,price))
         except KeyError as e:
             logging.error('Failed to add pack item in list.')
-            logging.error(e.with_traceback)
             return False
         else:
             return True
@@ -51,7 +51,8 @@ class Bakery:
         else:
             logging.error('Bakery item with code {} and size {} not available.'\
                 .format(code,size))
-            return None
+            raise ValueError('Bakery item with code {} and size {} not available.'\
+                .format(code,size))
 
     def __get_pack_util(self,pack_list, requested_size, result_pack, \
         result_size, result_list ):
@@ -61,7 +62,7 @@ class Bakery:
                 result_list.append(result_pack.copy())
             return 0
         else:
-            for i,pack in enumerate(pack_list):
+            for pack in pack_list:
                 if result_size + pack <= requested_size:
                     result_size += pack
                     result_pack.append(pack)
@@ -74,7 +75,7 @@ class Bakery:
         result_list = min(result_list,key=len)
         final_price = 0
         pack_combo = {}
-        for i,pack in enumerate(result_list):
+        for pack in result_list:
             pack_price = self.bakery_packs[code][pack]
             final_price += pack_price
             if pack not in pack_combo.keys():
@@ -86,8 +87,11 @@ class Bakery:
         return float(format(final_price,'.2f')), pack_combo
             
 
-    def order_bakery_item(self, name, order_size):
-        code = self.get_bakery_item(name)
+    def order_bakery_item(self, code, order_size):
+        # Check for item present in bakery or not
+        if code not in self.bakery_packs.keys():
+            logging.error('Requested item {} not available.'.format(code))
+            raise ValueError('Could not found item {} in bakery list.'.format(code))
         pack_list = list(self.bakery_packs[code].keys())
         result_pack = []
         result_list = []
@@ -98,5 +102,5 @@ class Bakery:
         else:
             logging.error(\
                 "Requested order of {} for {} could not be placed as no combination available.".\
-                format(order_size,name))
-            return None 
+                format(order_size,code))
+            raise ValueError('Could not found any combination for order size {}'.format(order_size))
