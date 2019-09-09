@@ -27,4 +27,5 @@ HOW DO I READ OUTPUT?
 
 WHAT IF INCORRECT INPUT IS PROVIDED?
     for incorrect input data, appropriate error message will be displayed on console.
-    Note: For order size (e.g. 1 or if pack combination is not available) appropriate error message will be displayed on colsole.
+    
+        Note: For order size (e.g. 1 or if pack combination is not available) appropriate error message will be displayed on colsole.
