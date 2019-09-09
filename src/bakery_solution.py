@@ -57,25 +57,24 @@ class Bakery:
     def __get_pack_util(self,pack_list, requested_size, result_pack, \
         result_size, result_list ):
         if result_size == requested_size:
-            result_pack.sort(reverse=True)
-            if result_pack not in result_list:
-                result_list.append(result_pack.copy())
-            return 0
+            result_list.append(result_pack.copy())
+            return True
         else:
             for pack in pack_list:
                 if result_size + pack <= requested_size:
                     result_size += pack
                     result_pack.append(pack)
-                    self.__get_pack_util(pack_list, requested_size, \
-                        result_pack, result_size, result_list)
+                    if self.__get_pack_util(pack_list, requested_size, \
+                        result_pack, result_size, result_list):
+                        return True
                     result_size -= pack
                     result_pack.remove(pack)
+            return False
 
     def __get_total_price_and_pack_details(self, code, result_list):
-        result_list = min(result_list,key=len)
         final_price = 0
         pack_combo = {}
-        for pack in result_list:
+        for pack in result_list[0]:
             pack_price = self.bakery_packs[code][pack]
             final_price += pack_price
             if pack not in pack_combo.keys():
@@ -93,14 +92,14 @@ class Bakery:
             logging.error('Requested item {} not available.'.format(code))
             raise ValueError('Could not find item {} in bakery list.'.format(code))
         pack_list = list(self.bakery_packs[code].keys())
+        pack_list.sort(reverse=True)
         result_pack = []
         result_list = []
-        self.__get_pack_util(pack_list, order_size, \
-            result_pack, 0, result_list)
-        if len(result_list) > 0 :
+        if self.__get_pack_util(pack_list, order_size, \
+            result_pack, 0, result_list):
             return self.__get_total_price_and_pack_details(code,result_list)
         else:
             logging.error(\
                 "Requested order of {} for {} could not be placed as no combination available.".\
                 format(order_size,code))
-            raise ValueError('Could not find any combination for order size {}'.format(order_size))
+            raise ValueError('Could not find any combination of {} packs for order {}'.format(code,order_size))

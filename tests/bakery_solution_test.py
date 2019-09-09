@@ -61,11 +61,14 @@ class TestBakery(object):
         with pytest.raises(ValueError):
             bakery_object.get_bakery_item_pack(code,8)
     
-    @pytest.mark.parametrize("code, order_size,expected",[('VS5',10,17.98),\
-        ('MB11',14,54.8),('CF',13,25.85)])
-    def test_order_bakery_items(self, code, order_size, expected, bakery_object):
-        price, _ = bakery_object.order_bakery_item(code,order_size)
+    @pytest.mark.parametrize("code, order_size,expected,pack",[('VS5',10,17.98,[5]),\
+        ('MB11',14,54.8,[8,2]),('CF',13,25.85,[5,3])])
+    def test_order_bakery_items(self, code, order_size, expected, pack, bakery_object):
+        price, pack_combo = bakery_object.order_bakery_item(code,order_size)
         assert price == expected, 'Expecting {} but got {}'.format(expected, price)
+        observed = list(pack_combo.keys())
+        observed.sort(reverse=True)
+        assert observed == pack, 'Expecting {} but got {}'.format(pack,observed)
 
     def test_order_bakery_item_when_order_size_is_very_small(self,bakery_object):
         order_size = 1

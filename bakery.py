@@ -22,11 +22,12 @@ def main():
         lines = fp.readlines()
         for line in lines:
             try:
-                order_size, code = line.split()
+                data = line.split()
+                order_size, code = data[0], data[1]
             except ValueError:
                 continue
             try:
-                price,pack_obj = bk.order_bakery_item(code.strip(),int(order_size))
+                price, pack_obj = bk.order_bakery_item(code.strip(),int(order_size))
             except ValueError as e:
                 print(str(e))
                 continue    
