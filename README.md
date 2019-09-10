@@ -10,6 +10,7 @@ HOW TO PROVIDE INPUT?
 
     Note: Do not insert blank lines inbetween or at the end.
           Enter space between order_size and bakery item code.
+          Only three bakery item codes are available for testing i.e VS5, MB11, CF
 
 HOW TO RUN?
     > python .\bakery.py
